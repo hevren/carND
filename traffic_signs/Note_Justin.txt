@@ -1,0 +1,56 @@
+
+Hello Justin,
+
+Here some explanation:
+
+1. my goal is to train the network and use to test German Road signs.
+2. To do that I train the network and save best solution (overfit check) ‘data/lenet.ckpt’ (I have tried absolute and relative paths, result are the same)
+3. I load the saved data to test by following:
+
+### Run the predictions here and use the model to output the prediction for each image.
+### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
+### Feel free to use as many code cells as needed.
+
+count = tf.Variable(0, dtype=tf.int32, name='count')
+acount_assign = count.assign_add(1)
+
+value = tf.placeholder(tf.float64, 1)
+accuracy_value = tf.Variable(0.0, dtype=tf.float64, name='accuracy_value')
+accuracy_value_assign=tf.assign(accuracy_value,value[0])
+
+one_hot_y = tf.one_hot(y, 42)
+
+logits = LeNet(x)
+sol1 = tf.nn.relu(logits)
+sol2 = tf.argmax(sol1, 1)
+
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+    saver.restore(sess, '/prj/selfLearningCar/LS2/CarND-Traffic-Sign-Classifier-Project-master/data/lenet.ckpt')
+    print("count:" + str(sess.run(count)) + " validation_accuracy:" + str(sess.run(accuracy_value)))
+
+    num_examples = len(german_signs)
+
+    res = sess.run(sol2, feed_dict={x: german_signs})
+    print("prediction:" + str(res))
+    print("prediction:" + str(signnames[res[0] + 1]) + " " + str(signnames[res[1] + 1]) + " " +
+          str(signnames[res[2] + 1]) + " " + str(signnames[res[3] + 1])+ " " + str(signnames[res[4] + 1]))
+    print("actual:" + str(signnames[german_signs_id[0] + 1]) + " " + str(signnames[german_signs_id[1] + 1]) + " " +
+          str(signnames[german_signs_id[2] + 1]) + " " + str(signnames[german_signs_id[3] + 1])+ " " + str(signnames[german_signs_id[4] + 1]))
+
+
+
+
+
+
+Error is 
+NotFoundError: Key accuracy_value_3 not found in checkpoint
+         [[Node: save_5/RestoreV2_5 = RestoreV2[dtypes=[DT_DOUBLE], _device="/job:localhost/replica:0/task:0/cpu:0"](_recv_save_5/Const_0, save_5/RestoreV2_5/tensor_names, save_5/RestoreV2_5/shape_and_slices)]]
+
+
+I have tested with python code (Sandbox.py and Helper.py to train network and save, Valid_3.py to test)
+
+I know tensor flow assign variables as it sees it so I named almost all variables. However I miss a point may be more consistent way of declaring Tensor Variables?
+
+

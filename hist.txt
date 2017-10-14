@@ -1,0 +1,7 @@
+  512  git init
+  513  echo "# carND" >> README.md
+  514  git add README.md
+  515  git commit -m "first commit"
+  516  git remote add origin https://github.com/hevren/carND.git
+  517  git push -u origin master
+  518  history > hist.txt
